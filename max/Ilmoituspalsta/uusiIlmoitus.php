@@ -2,12 +2,13 @@
 require_once "ilmoitus.php";
 
 if (isset ( $_POST ["submit"] )) {
+	
 } 
 elseif (isset ( $_POST ["peruuta"] )) {
 	header ( "location: index.php" );
 	exit ();
 } 
-else {v
+else {
 } 
 ?>
 <!DOCTYPE html>
@@ -17,7 +18,7 @@ else {v
 <title>Myyntipaikka netissä - osta, myy &amp; vaihda!</title>
 <meta name="author" content="Sirpa Marttila">
 <link href="ilmoitus.css" rel="stylesheet">
-<style type="text/css">
+<style>
 label {
 	display: block;
 	float: left;
