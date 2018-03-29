@@ -38,9 +38,6 @@ else {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="ilmoitus.css" rel="stylesheet">
 <title>Baarivisa Tulokset</title>
-<style type="text/css">
-
-</style>
 </head>
 
 <body>
@@ -48,7 +45,7 @@ else {
 
     <header class="w3-panel w3-center w3-opacity" style="padding:128px 16px">
                 <h1 class="w3-xlarge">Baarivisa Tulokset</h1>
-                        
+                     
   
                         <div class="w3-padding-32">
                         <div class="w3-bar w3-border">
@@ -73,7 +70,7 @@ else {
   <div class="form-group">
     <label class="control-label col-sm-2" for="date">Päivämäärä:</label>
     <div class="col-sm-10">
-      <input type="date" type="datetime-local" class="form-control" id="date" value="<?php print (htmlentities($result->getDate(), ENT_QUOTES, "UTF-8")); ?>" name="date" placeholder="Syötä Päivämäärä">
+      <input type="datetime-local" class="form-control" id="date" value="<?php print (htmlentities($result->getDate(), ENT_QUOTES, "UTF-8")); ?>" name="date">
       <br>
       <p  style="color: red">
       <span><?php  print($result->getError($dateError)); ?></span></p>
@@ -110,7 +107,7 @@ else {
     <div class="form-group">
     <label class="control-label col-sm-2" for="comment">Kommentit:</label>
     <div class="col-sm-10">
-    <textarea class="form-control" rows="5" id="comment" name="comment" value="<?php print (htmlentities($result->getComment(), ENT_QUOTES, "UTF-8")); ?>"></textarea><br>
+    <textarea class="form-control" rows="5" id="comment" name="comment" ></textarea><br>
     <p  style="color: red">
     <span><?php  print($result->getError($commentError)); ?></span></p>
     </div>
@@ -128,10 +125,12 @@ else {
 
   </div>
 
-
-<footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-large"> 
-<a href="https://github.com/MaxStrandberg"><i class="fa fa-github w3-hover-opacity"/></i>
-</footer>
 </header>
+
+</div>
+<footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-large"> 
+<a href="https://github.com/MaxStrandberg"></a><i class="fa fa-github w3-hover-opacity"></i>
+</footer>
+
 </body>
 </html>

@@ -8,9 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="ilmoitus.css" rel="stylesheet">
 <title>Baarivisa Tulokset</title>
-<style type="text/css">
 
-</style>
 </head>
 
 <body>
@@ -31,10 +29,12 @@
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
         <h2>Tervetuloa Baarivisa tulos sivulle</h2>
   </div>
-
-<footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-large"> 
-<a href="https://github.com/MaxStrandberg"><i class="fa fa-github w3-hover-opacity"/></i>
-</footer>
+  
 </header>
+</div>
+<footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-large"> 
+<a href="https://github.com/MaxStrandberg"></a><i class="fa fa-github w3-hover-opacity"></i>
+</footer>
+
 </body>
 </html>
