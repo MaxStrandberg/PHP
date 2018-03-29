@@ -107,7 +107,9 @@ else {
     <div class="form-group">
     <label class="control-label col-sm-2" for="comment">Kommentit:</label>
     <div class="col-sm-10">
-    <textarea class="form-control" rows="5" id="comment" name="comment" ></textarea><br>
+    <textarea class="form-control" rows="5" id="comment" name="comment" >
+    <?php print (htmlentities($result->getComment(), ENT_QUOTES, "UTF-8")); ?>
+    </textarea><br>
     <p  style="color: red">
     <span><?php  print($result->getError($commentError)); ?></span></p>
     </div>
