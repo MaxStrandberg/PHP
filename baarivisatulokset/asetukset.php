@@ -20,14 +20,14 @@
   
                         <div class="w3-padding-32">
                         <div class="w3-bar w3-border">
-                        <a href="index.php" class="w3-bar-item w3-button w3-light-grey">Home</a>
+                        <a href="index.php" class="w3-bar-item w3-button ">Home</a>
                         <a href="uusitulos.php" class="w3-bar-item w3-button ">Lisää</a>
                         <a href="tulokset.php" class="w3-bar-item w3-button">Tulokset</a>
-                        <a href="asetukset.php" class="w3-bar-item w3-button w3-hide-small">Asetukset</a>
+                        <a href="asetukset.php" class="w3-bar-item w3-button w3-hide-small w3-light-grey">Asetukset</a>
     </div>
   </div>
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
-        <h2>Tervetuloa Baarivisa tulos sivulle</h2>
+        <h2>Asetukset</h2>
   </div>
   
 </header>

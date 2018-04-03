@@ -4,12 +4,16 @@ require_once "tulos.php";
 if (isset ( $_POST ["submit"] )) {
     $result = new Tulos($_POST["place"], $_POST["date"], $_POST["players"], $_POST["points"], $_POST["placement"], $_POST["comment"]);
 
+    if (isset ($_POST["quiztype"])){
+        $result->setQuiztype($_POST["quiztype"]);
+    }
     $placeError = $result->checkPlace();
     $dateError = $result->checkDate();
     $playerError = $result->checkPlayers();
     $pointsError = $result->checkPoints();
     $placementError = $result->checkPlacement();
     $commentError = $result->checkComment();
+    $quiztypeError = $result->checkQuiztype();
 } 
 elseif (isset ( $_POST ["peruuta"] )) {
 	header ( "location: index.php" );
@@ -24,35 +28,37 @@ else {
     $pointsError = 0;
     $placementError = 0;
     $commentError = 0;
+    $quiztypeError = 0;
 } 
 ?>
 
 
 <!DOCTYPE html>
-<html>
+<html lang="fi">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="ilmoitus.css" rel="stylesheet">
+<link href="main.css" rel="stylesheet">
 <title>Baarivisa Tulokset</title>
 </head>
 
 <body>
+    
     <div class="w3-content" style="max-width:1500px">
 
-    <header class="w3-panel w3-center w3-opacity" style="padding:128px 16px">
+    <header class="w3-panel w3-center w3-opacity" style="padding:12px 16px">
                 <h1 class="w3-xlarge">Baarivisa Tulokset</h1>
                      
-  
-                        <div class="w3-padding-32">
+                <img src="baaripahkina.png" alt="Baaripähkinä"/>
+                <div class="w3-padding-32">
                         <div class="w3-bar w3-border">
                         <a href="index.php" class="w3-bar-item w3-button">Home</a>
                         <a href="uusitulos.php" class="w3-bar-item w3-button w3-light-grey">Lisää</a>
-                        <a href="#" class="w3-bar-item w3-button">Lista</a>
-                        <a href="#" class="w3-bar-item w3-button w3-hide-small">Asetukset</a>
+                        <a href="tulokset.php" class="w3-bar-item w3-button">Tulokset</a>
+                        <a href="asetukset.php" class="w3-bar-item w3-button w3-hide-small">Asetukset</a>
     </div>
   </div>
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
@@ -68,14 +74,37 @@ else {
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-2" for="date">Päivämäärä:</label>
+    <label class="control-label col-sm-2" for="date">Päivämäärä (muodossa pp/kk/vvvv):</label>
     <div class="col-sm-10">
-      <input type="datetime-local" class="form-control" id="date" value="<?php print (htmlentities($result->getDate(), ENT_QUOTES, "UTF-8")); ?>" name="date">
+      <input type="text" class="form-control" id="date" value="<?php print (htmlentities($result->getDate(), ENT_QUOTES, "UTF-8")); ?>" name="date">
       <br>
       <p  style="color: red">
       <span><?php  print($result->getError($dateError)); ?></span></p>
     </div>
   </div>
+
+  <div class="form-group">
+   
+  
+   <div class="col-sm-10">
+   <table>
+    <tr>
+    <th>Ranking</th>
+    <th>Finaali</th>
+    <th>Laiva</th>
+    </tr>
+    <tr>
+    <th><input type="radio" class="form-control"  value="Ranking" name="quiztype"></th>
+    <th><input type="radio" class="form-control"  value="Finaali" name="quiztype"></th>
+    <th><input type="radio" class="form-control"  value="Laiva"   name="quiztype"></th>
+   </tr>
+   </table>
+      <p  style="color: red">
+     <span><?php  print($result->getError($quiztypeError)); ?></span></p>
+   </div>
+   <p><?php print (htmlentities($result->getQuiztype())); ?></p>
+   
+ </div>
 
   <div class="form-group">
     <label class="control-label col-sm-2" for="players">Pelaaja määrä:</label>

@@ -1,3 +1,10 @@
 body,h1 {font-family: "Raleway", Arial, sans-serif}
 h1 {letter-spacing: 6px}
-.w3-row-padding img {margin-bottom: 12px}
+.w3-row-padding img {margin-bottom: 1px}
+table {
+    margin: 0;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 20px;
+}

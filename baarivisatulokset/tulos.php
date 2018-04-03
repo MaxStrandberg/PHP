@@ -12,7 +12,8 @@ class Tulos {
         17 => "Sijoitus vähintään 1",
         18 => "Päivämäärä pitää olla ennen tätä päivää",
         19 => "Kommentit voi olla max. 1000 merkkiä",
-        20 => "Kenttä pitää olla numero"
+        20 => "Kenttä pitää olla numero",
+        21 => "Anna muodossa pp/kk/vvvv"
 
 );
 
@@ -25,19 +26,21 @@ public static function getError($errorcode) {
 
     private $place;
     private $date;
+    private $quiztype;
     private $players;
-	private $placement;
+	  private $placement;
     private $points;
     private $comment;
     private $id;
 
-    function __construct($place = "", $date = "", $players = "", $points = "", $placement = "", $comment = "", $id = 0) {
+    function __construct($place = "", $date = "", $quiztype = "", $players = "", $points = "", $placement = "", $comment = "", $id = 0) {
 		$this->place = trim ( $place );
-		$this->date = trim ( $date );
-        $this->players= trim ( $players );
-        $this->points = trim ( $points );
-        $this->placement = trim ( $placement );
-        $this->comment = trim ( $comment );
+    $this->date = trim ( $date );
+    $this->quiztype = trim ( $quiztype );
+    $this->players= trim ( $players );
+    $this->points = trim ( $points );
+    $this->placement = trim ( $placement );
+    $this->comment = trim ( $comment );
 		$this->id = $id;
     }
     
@@ -77,15 +80,38 @@ public static function getError($errorcode) {
 
     public function checkDate($required = true, $min = 1) {
         
-        if ( strtotime($this->date) > time()){
+        if ( $this->date > date('d/m/Y')){
             return 18;
         }
 
-        if (strlen ( $this->place) < $min) {
-			return 11;
+        if (strlen ( $this->date) < $min) {
+			      return 11;
+        }
+
+        if ( preg_match("/^([0-9]{1,2})\\/([0-9]{1,2})\\/([0-9]{4})$/", $this->date) == false ){
+            return 21;
         }
 
 		return 0;
+    }
+
+    public function setQuiztype($quiztype) {
+      $this->quiztype = trim ( $quiztype );
+    }
+  
+    public function getQuiztype() {
+      return $this->quiztype;
+      }
+
+      public function checkQuiztype($required = true) {
+        
+        if (strlen ( $this->quiztype ) < 2) {
+          return 11;
+            }
+            
+
+
+		  return 0;
     }
     
     public function setPlayers($players) {
