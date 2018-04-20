@@ -1,35 +1,94 @@
 <?php
 require_once "tulos.php";
 
-if (isset ( $_POST ["submit"] )) {
-    $result = new Tulos($_POST["place"], $_POST["date"], $_POST["players"], $_POST["points"], $_POST["placement"], $_POST["comment"]);
+session_start();
 
-    if (isset ($_POST["quiztype"])){
-        $result->setQuiztype($_POST["quiztype"]);
-    }
+
+if (isset ( $_POST ["submit"] )) {
+
+ 
+    
+
+    $result = new Tulos($_POST["place"], $_POST["address"], $_POST["date"], $_POST["quiztype"], $_POST["players"], $_POST["points"], $_POST["placement"], $_POST["comment"]);
+    $_SESSION["tulos"] = $result;
+    session_write_close();
     $placeError = $result->checkPlace();
-    $dateError = $result->checkDate();
+    $addressError = $result->checkAddress();
+    $dateError = $result->checkInputdate();
     $playerError = $result->checkPlayers();
     $pointsError = $result->checkPoints();
     $placementError = $result->checkPlacement();
     $commentError = $result->checkComment();
+
+    if (!empty ($_POST["quiztype"])){
+      $result->setQuiztype($_POST["quiztype"]);
+  
+      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
+      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
+      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"]   == "Laiva")   ? "checked" : "";
+    }
     $quiztypeError = $result->checkQuiztype();
+   
+    
+    if ($placeError === 0 && $addressError === 0 && $dateError === 0 && $playerError === 0 && $pointsError === 0 && $placementError === 0 && $commentError === 0){
+      header("location: naytaTulos.php");
+      exit;
+    }
+  
+   
+    
+    
 } 
 elseif (isset ( $_POST ["peruuta"] )) {
-	header ( "location: index.php" );
+  header ( "location: index.php" );
+  unset($_SESSION["tulos"]);
 	exit ();
 } 
 else {
-    $result = new Tulos();
 
+  if (isset($_SESSION["tulos"])){
+    $result = $_SESSION["tulos"];
+    $placeError = $result->checkPlace();
+    $addressError = $result->checkAddress();
+    $dateError = $result->checkInputdate();
+    if (!empty ($_POST["quiztype"])){
+      $result->setQuiztype($_POST["quiztype"]);
+  
+      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
+      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
+      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"]   == "Laiva") ? "checked" : "";
+    }
+    $quiztypeError = $result->checkQuiztype();
+    $playerError = $result->checkPlayers();
+    $pointsError = $result->checkPoints();
+    $placementError = $result->checkPlacement();
+    $commentError = $result->checkComment();
+
+
+  }else{
+
+    $result = new Tulos();
     $placeError = 0;
     $dateError = 0;
+    $addressError = 0;
     $playerError = 0;
     $pointsError = 0;
     $placementError = 0;
     $commentError = 0;
     $quiztypeError = 0;
-} 
+
+    if (empty ( $_POST["quiztype"])) {
+      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
+      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
+      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Laiva") ? "checked" : "";
+    }
+}
+
+}
+
+
+    
+
 ?>
 
 
@@ -38,10 +97,12 @@ else {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="main.css" rel="stylesheet">
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="main.css" rel="stylesheet">
+
 <title>Baarivisa Tulokset</title>
 </head>
 
@@ -61,11 +122,14 @@ else {
                         <a href="asetukset.php" class="w3-bar-item w3-button w3-hide-small">Asetukset</a>
     </div>
   </div>
-  <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
+
+  </header>
+  
+<div class="w3-panel w3-center w3-opacity" style="padding:12px 16px">
         <h2>Lisää tulos</h2>
 <form class="form-horizontal" action="uusitulos.php" method="post">
   <div class="form-group">
-    <label class="control-label col-sm-2" for="place">Paikka:</label>
+    <label class="control-label col-sm-2" for="place">Paikka:<span style="color: #f64d78">*</span></label>
     <div class="col-sm-10">
       <input type="text" class="form-control" id="place" name="place" placeholder="Lisää paikka" value="<?php print (htmlentities($result->getPlace(), ENT_QUOTES, "UTF-8")); ?>">
       <br>
@@ -74,40 +138,50 @@ else {
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-2" for="date">Päivämäärä (muodossa pp/kk/vvvv):</label>
+    <label class="control-label col-sm-2" for="address">Osoite (muodossa: katu numero, kaupunki):<span style="color: #f64d78"></span></label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="address" name="address" placeholder="Lisää osoite" value="<?php print (htmlentities($result->getAddress(), ENT_QUOTES, "UTF-8")); ?>">
+      <br>
+      <p  style="color: red"><span><?php  print($result->getError($addressError)); ?></span></p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="date">Päivämäärä (muodossa pp/kk/vvvv):<span style="color: #f64d78">*</span></label>
     <div class="col-sm-10">
       <input type="text" class="form-control" id="date" value="<?php print (htmlentities($result->getDate(), ENT_QUOTES, "UTF-8")); ?>" name="date">
       <br>
       <p  style="color: red">
       <span><?php  print($result->getError($dateError)); ?></span></p>
+     
     </div>
   </div>
 
   <div class="form-group">
    
-  
+  <label class="control-label col-sm-2">Valitse visan tyyppi<span style="color: #f64d78">*</span></label>
    <div class="col-sm-10">
-   <table>
-    <tr>
+   <table class="center">
+  <tr>
     <th>Ranking</th>
     <th>Finaali</th>
     <th>Laiva</th>
-    </tr>
-    <tr>
-    <th><input type="radio" class="form-control"  value="Ranking" name="quiztype"></th>
-    <th><input type="radio" class="form-control"  value="Finaali" name="quiztype"></th>
-    <th><input type="radio" class="form-control"  value="Laiva"   name="quiztype"></th>
-   </tr>
-   </table>
-      <p  style="color: red">
-     <span><?php  print($result->getError($quiztypeError)); ?></span></p>
+  </tr>
+  <tr>
+    <th><input type="radio" class="form-control"  value="Ranking" name="quiztype" checked ></th>
+    <th><input type="radio" class="form-control"  value="Finaali" name="quiztype" ></th>
+    <th><input type="radio" class="form-control"  value="Laiva"   name="quiztype" ></th>
+  </tr>
+ </table>
+    
    </div>
-   <p><?php print (htmlentities($result->getQuiztype())); ?></p>
    
+   <p  style="color: red">
+     <span><?php  print($result->getError($quiztypeError)); ?></span></p>
  </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-2" for="players">Pelaaja määrä:</label>
+    <label class="control-label col-sm-2" for="players">Pelaaja määrä (1-5):<span style="color: #f64d78">*</span></label>
     <div class="col-sm-10">
       <input type="number" class="form-control" id="players" name="players" value="<?php print (htmlentities($result->getPlayers(), ENT_QUOTES, "UTF-8")); ?>"><br>
       <p  style="color: red">
@@ -116,7 +190,7 @@ else {
   </div>
 
   <div class="form-group">
-    <label class="control-label col-sm-2" for="points">Pisteet:</label>
+    <label class="control-label col-sm-2" for="points">Pisteet (max. 60):<span style="color: #f64d78">*</span></label>
     <div class="col-sm-10">
       <input type="number" class="form-control" id="points" name="points" value="<?php print (htmlentities($result->getPoints(), ENT_QUOTES, "UTF-8")); ?>"><br>
       <p  style="color: red">
@@ -125,7 +199,7 @@ else {
   </div>
 
    <div class="form-group">
-    <label class="control-label col-sm-2" for="placement">Sijoitus:</label>
+    <label class="control-label col-sm-2" for="placement">Sijoitus:<span style="color: #f64d78">*</span></label>
     <div class="col-sm-10">
       <input type="number" class="form-control" id="placement" name="placement" value="<?php print (htmlentities($result->getPlacement(), ENT_QUOTES, "UTF-8")); ?>"><br>
       <p  style="color: red">
@@ -145,9 +219,10 @@ else {
   </div>
 
   <div class="form-group">
+  <p style="font-size:75%;">(<span style="color: #f64d78">*</span> Pakollisia kenttiä)</p>
     <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" name="submit" class="btn btn-default">Submit</button>
-      <button type="submit" name="peruuta" class="btn btn-default">Peruuta</button>
+      <button type="submit" name="submit" class="btn btn-secondary">Submit</button>
+      <button type="submit" name="peruuta" class="btn btn-secondary">Peruuta</button>
     </div>
   </div>
 
@@ -156,7 +231,7 @@ else {
 
   </div>
 
-</header>
+
 
 </div>
 <footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-large"> 

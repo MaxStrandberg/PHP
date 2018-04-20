@@ -11,9 +11,14 @@ class Tulos {
         16 => "Pisteet max. 60",
         17 => "Sijoitus vähintään 1",
         18 => "Päivämäärä pitää olla ennen tätä päivää",
-        19 => "Kommentit voi olla max. 1000 merkkiä",
+        19 => "Kommentit voi olla max. 300 merkkiä",
         20 => "Kenttä pitää olla numero",
-        21 => "Anna muodossa pp/kk/vvvv"
+        21 => "Anna muodossa pp/kk/vvvv",
+        22 => "Anna päivämäärä 01/01/1950 jälkeen",
+        24 => "Anna kelvollinen päivämäärä",
+        25 => "Ei saa käyttää rumia sanoja",
+        26 => "Pitää olla alle 75 merkkiä",
+        27 => "Anna muodossa kadunnimi numero/kirjain, kaupunki"
 
 );
 
@@ -24,7 +29,10 @@ public static function getError($errorcode) {
     return self::$errorlist [- 1];
 }
 
+
+
     private $place;
+    private $address;
     private $date;
     private $quiztype;
     private $players;
@@ -33,8 +41,9 @@ public static function getError($errorcode) {
     private $comment;
     private $id;
 
-    function __construct($place = "", $date = "", $quiztype = "", $players = "", $points = "", $placement = "", $comment = "", $id = 0) {
-		$this->place = trim ( $place );
+    function __construct($place = "", $address = "", $date = "", $quiztype = "", $players = "", $points = "", $placement = "", $comment = "", $id = 0) {
+    $this->place = trim ( $place );
+    $this->address = trim ( $address );
     $this->date = trim ( $date );
     $this->quiztype = trim ( $quiztype );
     $this->players= trim ( $players );
@@ -65,10 +74,35 @@ public static function getError($errorcode) {
         if (strlen ( $this->place ) > $max) {
 			return 12;
         }
-        
+      
         return 0;
 
     }
+
+    public function setAddress($address) {
+      $this->address = trim ( $address );
+    }
+  
+    public function getAddress() {
+      return $this->address;
+      }
+      
+      public function checkAddress( $max = 75) {
+
+        if ( strlen($this->address > $max)){
+          
+          return 26;
+        }
+
+        if ( !preg_match("/^[a-zåäöA-ZÅÄÖ-]{0,40}+\ +[0-9]{1,3}[a-zåäöA-ZÅÄÖ]{0,2}+\, +[a-zåäöA-ZÅÄÖ]{0,25}+$/", $this->address) ){
+          return 27;
+      }
+
+        
+
+        return 0;
+
+      }
 
 
     public function setDate($date) {
@@ -78,18 +112,34 @@ public static function getError($errorcode) {
 		return $this->date;
     }
 
-    public function checkDate($required = true, $min = 1) {
+    public function checkInputdate($required = true, $min = 1) {
+      if (strlen ( $this->date) < $min) {
+        return 11;
+    }
+
+    if ( preg_match("/^([0-3]{1}[0-9]{1})\\/([0-1]{1}[0-9]{1})\\/([0-9]{4})$/", $this->date) == false ){
+        return 21;
+    }
+
+
+        $inputtedDate = implode('', array_reverse(explode('/', $this->date)));
+        $thisdate = implode('', array_reverse(explode('/', date("d/m/Y", time()))));
+        $mindate = 19500101;
+        list($day,$month,$year) = explode('/', $this->date);
         
-        if ( $this->date > date('d/m/Y')){
-            return 18;
-        }
 
-        if (strlen ( $this->date) < $min) {
-			      return 11;
-        }
+        if ( $inputtedDate > $thisdate ){
+              return 18;
+        } 
 
-        if ( preg_match("/^([0-9]{1,2})\\/([0-9]{1,2})\\/([0-9]{4})$/", $this->date) == false ){
-            return 21;
+       if (checkdate($month,$day,$year) == false) {
+            return 24;
+       }
+
+       
+        if ( $inputtedDate < $mindate){
+
+          return 22;
         }
 
 		return 0;
@@ -105,10 +155,13 @@ public static function getError($errorcode) {
 
       public function checkQuiztype($required = true) {
         
+        
+
+
         if (strlen ( $this->quiztype ) < 2) {
           return 11;
+
             }
-            
 
 
 		  return 0;
@@ -154,6 +207,8 @@ public static function getError($errorcode) {
         if ($required == false &&  $this->points  == 0) {
 			return 0;
         }
+
+        
         
         if ($this->points  < $min) {
 			return 15;
@@ -162,6 +217,12 @@ public static function getError($errorcode) {
         if ($this->points  > $max) {
 			return 16;
         }
+
+        if ( is_numeric($this->points)  == false) {
+          return 20;
+            }
+
+
         
         return 0;
 
@@ -176,13 +237,18 @@ public static function getError($errorcode) {
     public function checkPlacement($required = true, $min = 1) {
 
         if ($required == false &&  $this->placement  == 0) {
-			return 0;
+			    return 0;
         }
+
+      
         
         if ($this->placement < $min) {
-			return 17;
+			    return 17;
         }
         
+        if ( is_numeric($this->placement)  == false) {
+          return 20;
+            }
         
         return 0;
 
@@ -194,13 +260,16 @@ public static function getError($errorcode) {
     public function getComment() {
 		return $this->comment;
     }
-    public function checkComment($max = 1000) {
+    public function checkComment($max = 300) {
 
 
         if (strlen ( $this->comment ) > $max) {
 			return 19;
         }
-        
+      
+        if (preg_match('/\b(paska|saatana)\b/', $this->comment)){
+          return 25;
+        }
         
         return 0;
 
