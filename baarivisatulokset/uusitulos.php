@@ -168,10 +168,36 @@ else {
     <th>Laiva</th>
   </tr>
   <tr>
-    <th><input type="radio" class="form-control"  value="Ranking" name="quiztype" checked ></th>
-    <th><input type="radio" class="form-control"  value="Finaali" name="quiztype" ></th>
-    <th><input type="radio" class="form-control"  value="Laiva"   name="quiztype" ></th>
+    <th><input type="radio" class="form-control"  value="Ranking" name="quiztype" 
+    <?php 
+    if (htmlentities($result->getQuiztype(), ENT_QUOTES, "UTF-8") === "Ranking"){
+    print("checked");
+  }else
+    {
+      print("unchecked");
+    }
+    ?> 
+    </th>
+    <th><input type="radio" class="form-control"  value="Finaali" name="quiztype"  
+    <?php 
+    if (htmlentities($result->getQuiztype(), ENT_QUOTES, "UTF-8") === "Finaali"){
+    print("checked");
+  }else
+    {
+      print("unchecked");
+    }
+    ?>   ></th>
+    <th><input type="radio" class="form-control"  value="Laiva"   name="quiztype"  <?php 
+    if (htmlentities($result->getQuiztype(), ENT_QUOTES, "UTF-8") === "Laiva"){
+    print("checked");
+  }else
+    {
+      print("unchecked");
+    }
+    ?>   ></th>
   </tr>
+
+ 
  </table>
     
    </div>

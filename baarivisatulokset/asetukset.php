@@ -1,5 +1,5 @@
 <?php
-$name = "";
+$name = " ";
 if (isset($_POST["submit"])) {		 
    $name = $_POST["name"] ;
    setcookie("nimi", $name, time() + 60*60*24*7);
@@ -40,7 +40,14 @@ if (isset($_POST["submit"])) {
         <div class="w3-panel w3-center w3-opacity" style="padding:12px 16px">
         <form action="" method="post">
         <p>Laita nimi sivulle: </p>
-        <input type="input" name="name" type="text" size="20" value="<?php print($_COOKIE["nimi"]) ?>"/><input name="submit" type="submit" value="Lisää">
+        <input type="input" name="name" type="text" size="20" 
+        value="<?php 
+        if (isset($_COOKIE["nimi"])){
+          print($_COOKIE["nimi"]);
+        }else {
+          print(" ");
+        } ?>"/>
+        <input name="submit" type="submit" value="Lisää">
         </form>
         </div>
   </div>
