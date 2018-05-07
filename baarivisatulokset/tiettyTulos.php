@@ -31,9 +31,11 @@
 
  <?php
         try {
+          session_start();
+          $valittuID = $_GET['valittuID'];
           require_once "tulosPDO.php";
           $kanta = new tulosPDO();
-          $rivit = $kanta->allResults();
+          $rivit = $kanta->getResult();
           foreach ($rivit as $result) {
           print("<p>Paikka: " . $result->getPlace());
           print("<br>Osoite: " . $result->getAddress());

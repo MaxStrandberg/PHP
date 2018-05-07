@@ -1,4 +1,26 @@
 <?php
+require_once "tulos.php";
+
+
+session_start();
+    $valittuID = "";
+
+    $_SESSION['valittuID'] = $valittuID;
+  
+    if (isset ($_POST["delete"])){
+      try{
+      require_once "tulosPDO.php";
+      $_SESSION['valittuID'] = $valittuID;
+      $kantakasittely = new tulosPDO();
+      $id = $kantakasittely->deleteResult();
+      }catch (Exception $error) {
+        print($error->getMessage());
+      }
+      header("location: tulokset.php");
+   
+      exit;
+  }
+
 
 ?>
 <!DOCTYPE html>
@@ -39,11 +61,11 @@
           $rivit = $kanta->allResults();
           foreach ($rivit as $result) {
           print("<p>Paikka: " . $result->getPlace());
-          print("<br>Päivämäärä: " . $result->getDate());
-          print("<form action='' method='post'> ");
-          print("<input type='hidden' name='id' value='". $result->getId())."'/> ";
-          print("<input type='submit' name='fix' value='Näytä'/>");
-          print("<input type='submit' name='delete' value='Poista'/>");
+          print("<br>Päivämäärä: " . $result->getDate()."</p>");
+          print("<form action='tiettyTulos.php' method='get'> ");
+          print("<input type='hidden' name='valittuID' value='". $result->getId())."'/> ";
+          print("<input type='submit' name='show' value='Näytä'/></form>");
+          print("<form action='' method='post'><input type='hidden' name='valittuID' value='". $result->getId()."'/><input type='submit' name='delete' value='Poista'/>");
           print("</form>");
                 }
             } catch (Exception $error) {
