@@ -1,6 +1,3 @@
-<?php
-
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,19 +29,21 @@
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
         <h2>Tulokset</h2>
 
-    <?php
+ <?php
         try {
           require_once "tulosPDO.php";
           $kanta = new tulosPDO();
           $rivit = $kanta->allResults();
           foreach ($rivit as $result) {
           print("<p>Paikka: " . $result->getPlace());
+          print("<br>Osoite: " . $result->getAddress());
           print("<br>Päivämäärä: " . $result->getDate());
-          print("<form action='' method='post'> ");
-          print("<input type='hidden' name='id' value='". $result->getId())."'/> ";
-          print("<input type='submit' name='fix' value='Näytä'/>");
-          print("<input type='submit' name='delete' value='Poista'/>");
-          print("</form>");
+          print("<br>Visatyyppi: " . $result->getQuiztype());
+          print("<br>Pelaajamäärä: " . $result->getPlayers());
+          print("<br>Pisteet: " . $result->getPoints());
+          print("<br>Sijoitus: " . $result->getPlacement());
+          print("<br>Kommentti: " . $result->getComment() . "</p>");
+          print("<input type='button' onclick='window.history.go(-1); return false;' name='back' value='Takaisin'/>");
                 }
             } catch (Exception $error) {
               print($error->getMessage());

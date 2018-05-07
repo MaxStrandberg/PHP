@@ -8,6 +8,16 @@ if (isset ($_POST["fix"])){
     $tulos = $_SESSION["tulos"];
     exit;
 }elseif ( isset ($_POST["save"])){
+
+    try {
+        require_once "tulosPDO.php";
+        $kantakasittely = new tulosPDO();
+        $id = $kantakasittely->addResult($_SESSION["tulos"]);
+        } catch(Exception $error) 
+        {
+        print($error->getMessage());
+        }
+
     header("location: kiitos.php");
    
     exit;

@@ -20,13 +20,7 @@ if (isset ( $_POST ["submit"] )) {
     $placementError = $result->checkPlacement();
     $commentError = $result->checkComment();
 
-    if (!empty ($_POST["quiztype"])){
-      $result->setQuiztype($_POST["quiztype"]);
-  
-      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
-      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
-      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"]   == "Laiva")   ? "checked" : "";
-    }
+ 
     $quiztypeError = $result->checkQuiztype();
    
     
@@ -35,7 +29,13 @@ if (isset ( $_POST ["submit"] )) {
       exit;
     }
   
-   
+    try { require_once "tulosPDO.php";
+      $kantakasittely = new tulosPDO();
+      $id = $kantakasittely->addresult($result);
+      } catch (Exception $error) 
+      {
+      print($error->getMessage());
+      }
     
     
 } 
@@ -51,13 +51,7 @@ else {
     $placeError = $result->checkPlace();
     $addressError = $result->checkAddress();
     $dateError = $result->checkInputdate();
-    if (!empty ($_POST["quiztype"])){
-      $result->setQuiztype($_POST["quiztype"]);
-  
-      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
-      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
-      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"]   == "Laiva") ? "checked" : "";
-    }
+ 
     $quiztypeError = $result->checkQuiztype();
     $playerError = $result->checkPlayers();
     $pointsError = $result->checkPoints();
@@ -77,11 +71,7 @@ else {
     $commentError = 0;
     $quiztypeError = 0;
 
-    if (empty ( $_POST["quiztype"])) {
-      $ranking_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Ranking") ? "checked" : "";
-      $finaali_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Finaali") ? "checked" : "";
-      $laiva_status = (isset($_POST["quiztype"]) && $_POST["quiztype"] == "Laiva") ? "checked" : "";
-    }
+  
 }
 
 }
@@ -161,6 +151,7 @@ else {
    
   <label class="control-label col-sm-2">Valitse visan tyyppi<span style="color: #f64d78">*</span></label>
    <div class="col-sm-10">
+   <input type="hidden" name="quiztype" value="Q">
    <table class="center">
   <tr>
     <th>Ranking</th>
@@ -176,8 +167,7 @@ else {
     {
       print("unchecked");
     }
-    ?> 
-    </th>
+    ?>  ></th>
     <th><input type="radio" class="form-control"  value="Finaali" name="quiztype"  
     <?php 
     if (htmlentities($result->getQuiztype(), ENT_QUOTES, "UTF-8") === "Finaali"){

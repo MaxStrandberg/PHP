@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
-        <h2>Tervetuloa Baarivisa tulos sivulle <?php 
+        <h2>Tervetuloa Baarivisa tulossivulle <?php 
         if (isset($_COOKIE["nimi"])){
           print($_COOKIE["nimi"]);
         }else {

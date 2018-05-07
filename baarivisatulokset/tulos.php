@@ -88,15 +88,19 @@ public static function getError($errorcode) {
       }
       
       public function checkAddress( $max = 75) {
+        
+        if ( strlen($this->address<1)){
+          return 0;
+        }
 
         if ( strlen($this->address > $max)){
           
           return 26;
         }
-
-        if ( !preg_match("/^[a-zåäöA-ZÅÄÖ-]{0,40}+\ +[0-9]{1,3}[a-zåäöA-ZÅÄÖ]{0,2}+\, +[a-zåäöA-ZÅÄÖ]{0,25}+$/", $this->address) ){
+        
+        if( !preg_match("/^[a-zåäöA-ZÅÄÖ-]{0,40}+\ +[0-9]{1,3}[a-zåäöA-ZÅÄÖ]{0,2}+\, +[a-zåäöA-ZÅÄÖ]{0,25}+$/", $this->address) ){
           return 27;
-      }
+        }
 
         
 
