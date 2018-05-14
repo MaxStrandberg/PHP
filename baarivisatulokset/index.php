@@ -16,23 +16,26 @@
 
     <header class="w3-panel w3-center w3-opacity" style="padding:12px 16px">
                 <h1 class="w3-xlarge">Baarivisa Tulokset</h1>
-                <img src="baaripahkina.png"/>        
+                <img src="baaripahkina.png" alt="logo"/>
   
                         <div class="w3-padding-32">
                         <div class="w3-bar w3-border">
                         <a href="index.php" class="w3-bar-item w3-button w3-light-grey">Home</a>
                         <a href="uusitulos.php" class="w3-bar-item w3-button ">Lisää</a>
                         <a href="tulokset.php" class="w3-bar-item w3-button">Tulokset</a>
+                        <a href="haeTulos.php" class="w3-bar-item w3-button ">Hae Tulosta</a>
                         <a href="asetukset.php" class="w3-bar-item w3-button w3-hide-small">Asetukset</a>
     </div>
   </div>
   <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
-        <h2>Tervetuloa Baarivisa tulossivulle <?php 
+        <h2>Tervetuloa Baarivisa tulossivulle 
+        <?php 
         if (isset($_COOKIE["nimi"])){
           print($_COOKIE["nimi"]);
         }else {
           return null;
-        } ?></h2>
+        } ?>
+        </h2>
   </div>
   
 </header>

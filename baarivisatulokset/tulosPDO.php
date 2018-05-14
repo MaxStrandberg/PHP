@@ -7,7 +7,7 @@ class tulosPDO{
     private $lkm;
 
     function __construct($dsn="mysql:host=localhost;dbname=visatulokset", $user="root", $password="salainen") {
-    $this->db  = new PDO($dsn, $user);
+    $this->db  = new PDO($dsn, $user, $password);
     $this->db ->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     $this->db ->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     $this->lkm   = 0;
@@ -84,7 +84,53 @@ class tulosPDO{
                                         return
                                         $tulos;
                     }
-        
+        public function searchResult($place) {
+                        $sql = "SELECT id, place, address, date, quiztype, players, points, placement, comment 
+                                FROM tulokset
+                                WHERE place like :place";
+                        
+                        // Valmistellaan lause, prepare on PDO-luokan metodeja
+                        if (! $stmt = $this->db->prepare ( $sql )) {
+                            $virhe = $this->db->errorInfo ();
+                            throw new PDOException ( $virhe [2], $virhe [1] );
+                        }
+                        
+                        // Sidotaan parametrit
+                        $pl = "%" . utf8_decode ( $place ) . "%";
+                        $stmt->bindValue ( ":place", $pl, PDO::PARAM_STR );
+                        
+                        // Ajetaan lauseke
+                        if (! $stmt->execute ()) {
+                            $virhe = $stmt->errorInfo ();
+                            
+                            if ($virhe [0] == "HY093") {
+                                $virhe [2] = "Invalid parameter";
+                            }
+                            
+                            throw new PDOException ( $virhe [2], $virhe [1] );
+                        }
+                        
+                       
+                        $tulos = array ();
+                        
+                        while ( $row = $stmt->fetchObject () ) {
+                            $result = new Tulos();
+                            $result->setId($row->id);
+                            $result->setPlace(utf8_encode($row->place));
+                            $result->setAddress(utf8_encode($row->address));
+                            $result->setDate(utf8_encode($row->date));
+                            $result->setQuiztype(utf8_encode($row->quiztype));
+                            $result->setPlayers(utf8_encode($row->players)); 
+                            $result->setPoints(utf8_encode($row->points)); 
+                            $result->setPlacement(utf8_encode($row->placement));
+                            $result->setComment(utf8_encode($row->comment));  
+                            $tulos[] = $result;
+                        }
+                        
+                        $this->lkm = $stmt->rowCount ();
+                        
+                        return $tulos;
+                    }
 
     function addResult($result){
 

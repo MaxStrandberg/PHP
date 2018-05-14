@@ -55,7 +55,7 @@ if(isset($_SESSION["tulos"])){
 
     <header class="w3-panel w3-center w3-opacity" style="padding:12px 16px">
                 <h1 class="w3-xlarge">Baarivisa Tulokset</h1>
-                <img src="baaripahkina.png"/>        
+                <img src="baaripahkina.png" alt="logo"/>
   
                         <div class="w3-padding-32">
                         <div class="w3-bar w3-border">

@@ -1,5 +1,5 @@
 <?php
-class Tulos { 
+class Tulos implements JsonSerializable { 
     private static $errorlist = array (
         - 1 => "Tuntematon virhe",
         0 => "",
@@ -21,6 +21,21 @@ class Tulos {
         27 => "Anna muodossa kadunnimi numero/kirjain, kaupunki"
 
 );
+
+public function jsonSerialize() {
+
+  return array ( 
+    "place" => $this->place,
+    "address" => $this->address,
+    "date" => $this->date,
+    "quiztype" => $this->quiztype,
+    "players" => $this->players,
+    "placement" => $this->placement,
+    "points" => $this->points,
+    "comment" => $this->comment,
+    "id" => $this->id 
+);
+}
 
 public static function getError($errorcode) {
     if (isset ( self::$errorlist [$errorcode] ))
